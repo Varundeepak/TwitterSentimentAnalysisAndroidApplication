@@ -3,9 +3,11 @@ package com.example.twittertest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,26 +35,35 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements View.OnClickListener {
 
     RequestQueue requestQueue;
     String postext=null,negtext=null;
     int positive=0,negative=0,neutral=0;
     TextView textview2,textview3;
     PieChart pie;
+    Button One ;
+    Button Two;
+    EditText name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final EditText name = findViewById(R.id.input);
+        One= (Button) findViewById(R.id.submitbutton);
+        Two= findViewById(R.id.trendbutton);
         textview2=findViewById(R.id.textview2);
         textview3=findViewById(R.id.textview3);
+        //final EditText name= findViewById(R.id.input);
+        name= findViewById(R.id.input);
         textview2.setMovementMethod(new ScrollingMovementMethod());
         textview3.setMovementMethod(new ScrollingMovementMethod());
         pie=findViewById(R.id.piechart);
-        Button One = (Button) findViewById(R.id.submitbutton);
-        One.setOnClickListener(new View.OnClickListener() {
+
+        One.setOnClickListener(this);
+        Two.setOnClickListener(this);
+
+        /*One.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String in=name.getText().toString();
@@ -67,6 +78,20 @@ public class MainActivity extends Activity {
                 }
 
             });
+        Two.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent i1 = new Intent(MainActivity.this, Trend.class);
+                    startActivity(i1);
+                }
+                catch(Exception e) {
+                    Toast.makeText(getApplicationContext(),"Exception Caught in MainActivity",Toast.LENGTH_LONG).show();
+                    Log.d("MainActivity", "Caught On MainActivity");
+                }
+            }
+        }); */
+
         }
 
     private void Submit(String data)
@@ -161,5 +186,24 @@ public class MainActivity extends Activity {
                 })
                 .setNegativeButton("No", null)
                 .show();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v== One){
+            String in=name.getText().toString();
+            //String jsonformat="{\"name\" : "+in+"}";
+            if(in.length()>0){
+                String jsonformat=in;
+                Submit(jsonformat);}
+            else{
+                Toast.makeText(getApplicationContext(),"Please Enter Something!!!",Toast.LENGTH_LONG).show();
+            }
+        }
+        else if(v==Two){
+            Intent i1 = new Intent(MainActivity.this, Trend.class);
+            startActivity(i1);
+        }
+
     }
 }
